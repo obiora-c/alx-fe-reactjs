@@ -18,7 +18,7 @@ function App() {
         <WelcomeMessage />
         <Header />
         <MainContent />
-        <Counter/>
+        <Counter />
 
         
         
