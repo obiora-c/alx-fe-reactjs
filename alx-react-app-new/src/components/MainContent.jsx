@@ -1,11 +1,19 @@
 function MainContent () {
     return (
         <div> 
-            <main  style={{
-            backgroundColor : 'pink',
-            textAlign : 'center',
-            padding : '10px',
-        }}>
+            <span
+
+                    style={{
+                    color: 'blue',
+                    border: '1px solid blue',
+                    padding: '10px',
+                    margin: '10px',
+                    }}
+            >
+    
+                </span>
+            <main>
+
                <p>I love to visit New York, Paris, and Tokyo.</p>
             </main>
 
