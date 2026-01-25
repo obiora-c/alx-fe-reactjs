@@ -7,6 +7,8 @@ const Navbar = () => {
     <nav
       style={{
         background: "#222",
+        backgroundColor: "yellowgreen",
+        justifyContent: "center",
         padding: "15px",
         display: "flex",
         gap: "20px",
