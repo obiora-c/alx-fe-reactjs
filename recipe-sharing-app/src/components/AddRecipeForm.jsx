@@ -24,6 +24,8 @@ const AddRecipeForm = () => {
             <button type="Submit"> Add recipe</button>
 
         </form>
-    )
+    );
 
-}
+};
+
+export default AddRecipeForm;
