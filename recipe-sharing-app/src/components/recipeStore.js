@@ -15,7 +15,17 @@ const useRecipeStore = create(set => ({
                 recipe.id === updatedRecipe.id ? updatedRecipe : recipe
         ),
 
-        })),
+    setSearchTerm: (term) => set({ searchTerm: term }),
+
+
+    filteredRecipes: () => {
+    const { recipes, searchTerm } = get()
+    return recipes.filter((recipe) =>
+    recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    },
+
+})),
 
     setRecipes: (recipes) => set ({ recipes })
 }));
