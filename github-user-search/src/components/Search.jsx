@@ -1,12 +1,9 @@
 import { useState } from "react";
-import { searchUsers, fetchUserDetails } from "../services/githubService";
+import { fetchUserData } from "../services/githubService";
 
 const Search = () => {
   const [username, setUsername] = useState("");
-  const [location, setLocation] = useState("");
-  const [repos, setRepos] = useState("");
-  const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -17,105 +14,41 @@ const Search = () => {
 
     setLoading(true);
     setError("");
-    setUsers([]);
-    setSelectedUser(null);
+    setUser(null);
 
     try {
-      const data = await searchUsers({
-        username,
-        location,
-        repos,
-      });
-      setUsers(data.items);
-    } catch {
+      const data = await fetchUserData(username);
+      setUser(data);
+    } catch (err) {
       setError("Looks like we cant find the user");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleUserClick = async (login) => {
-    setLoading(true);
-    setError("");
-
-    try {
-      const data = await fetchUserDetails(login);
-      setSelectedUser(data);
-    } catch {
-      setError("Failed to load user details");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      {/* Form */}
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-4 rounded shadow space-y-4"
-      >
+    <div>
+      <form onSubmit={handleSubmit}>
         <input
-          className="w-full border p-2 rounded"
-          placeholder="GitHub username"
+          type="text"
+          placeholder="Search GitHub username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
-
-        <input
-          className="w-full border p-2 rounded"
-          placeholder="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-        />
-
-        <input
-          type="number"
-          className="w-full border p-2 rounded"
-          placeholder="Minimum repositories"
-          value={repos}
-          onChange={(e) => setRepos(e.target.value)}
-        />
-
-        <button className="w-full bg-black text-white py-2 rounded">
-          Search Users
-        </button>
+        <button type="submit">Search</button>
       </form>
 
-      {loading && <p className="text-center mt-4">Loading...</p>}
-      {error && <p className="text-center mt-4 text-red-500">{error}</p>}
+      {/* Conditional Rendering */}
+      {loading && <p>Loading...</p>}
 
-      {/* Results */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-        {users.map((user) => (
-          <div
-            key={user.id}
-            onClick={() => handleUserClick(user.login)}
-            className="cursor-pointer border p-4 rounded hover:bg-gray-50"
-          >
-            <img
-              src={user.avatar_url}
-              alt={user.login}
-              className="w-16 h-16 rounded-full"
-            />
-            <p className="font-semibold mt-2">{user.login}</p>
-          </div>
-        ))}
-      </div>
+      {error && <p>{error}</p>}
 
-      {/* Selected User Details (fetch) */}
-      {selectedUser && (
-        <div className="mt-6 border rounded p-4 bg-white">
-          <h2 className="text-xl font-bold">{selectedUser.name}</h2>
-          <p>Location: {selectedUser.location || "N/A"}</p>
-          <p>Repositories: {selectedUser.public_repos}</p>
-          <a
-            href={selectedUser.html_url}
-            target="_blank"
-            rel="noreferrer"
-            className="text-blue-600"
-          >
-            View Full Profile
+      {user && (
+        <div>
+          <img src={user.avatar_url} alt={user.login} width="100" />
+          <h3>{user.name || user.login}</h3>
+          <a href={user.html_url} target="_blank" rel="noreferrer">
+            View GitHub Profile
           </a>
         </div>
       )}
