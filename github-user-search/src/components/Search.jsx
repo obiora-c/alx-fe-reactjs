@@ -24,7 +24,7 @@ const Search = () => {
       setUsers(data.items);
       setTotalCount(data.total_count);
     } catch (err) {
-      setError("Looks like we can't find any users with these criteria.");
+      setError("Looks like we cant find the user");
     } finally {
       setLoading(false);
     }
