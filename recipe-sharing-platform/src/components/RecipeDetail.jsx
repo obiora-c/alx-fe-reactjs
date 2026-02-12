@@ -1,20 +1,30 @@
 import { useParams, Link } from "react-router-dom"
+import { useEffect, useState } from "react"
 import recipesData from "../data.json"
 
 const RecipeDetail = () => {
   const { id } = useParams()
+  const [recipe, setRecipe] = useState(null)
 
-  // Find recipe by ID
-  const recipe = recipesData.find(
-    (item) => item.id === Number(id)
-  )
+  // Load recipe when component mounts or ID changes
+  useEffect(() => {
+    const selectedRecipe = recipesData.find(
+      (item) => item.id === Number(id)
+    )
+    setRecipe(selectedRecipe)
+  }, [id])
 
-  // Handle invalid ID
+  // Loading / invalid recipe guard
   if (!recipe) {
     return (
       <div className="text-center py-20">
-        <h2 className="text-2xl font-bold">Recipe not found</h2>
-        <Link to="/" className="text-green-600 hover:underline">
+        <h2 className="text-2xl font-bold">
+          Recipe not found
+        </h2>
+        <Link
+          to="/"
+          className="text-green-600 hover:underline"
+        >
           Go back home
         </Link>
       </div>
@@ -75,4 +85,4 @@ const RecipeDetail = () => {
   )
 }
 
-export default RecipeDetail
+export default RecipeDetail;
