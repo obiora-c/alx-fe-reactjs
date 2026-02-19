@@ -4,20 +4,31 @@ export default function RegistrationForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [errors, setErrors] = useState({});
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Basic validation
-    if (!username || !email || !password) {
-      setError("All fields are required");
-      return;
+    let newErrors = {};
+
+    if (!username) {
+      newErrors.username = "Username is required";
     }
 
-    setError("");
+    if (!email) {
+      newErrors.email = "Email is required";
+    }
+
+    if (!password) {
+      newErrors.password = "Password is required";
+    }
+
+    setErrors(newErrors);
+
+    // Stop submission if there are errors
+    if (Object.keys(newErrors).length > 0) {
+      return;
+    }
 
     try {
       const response = await fetch(
@@ -32,13 +43,14 @@ export default function RegistrationForm() {
       );
 
       if (response.ok) {
-        setSuccess("User registered successfully!");
+        alert("User registered successfully!");
         setUsername("");
         setEmail("");
         setPassword("");
+        setErrors({});
       }
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -53,6 +65,7 @@ export default function RegistrationForm() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
+        {errors.username && <p>{errors.username}</p>}
       </div>
 
       <div>
@@ -62,6 +75,7 @@ export default function RegistrationForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        {errors.email && <p>{errors.email}</p>}
       </div>
 
       <div>
@@ -71,12 +85,10 @@ export default function RegistrationForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        {errors.password && <p>{errors.password}</p>}
       </div>
 
       <button type="submit">Register</button>
-
-      {error && <p>{error}</p>}
-      {success && <p>{success}</p>}
     </form>
   );
 }
